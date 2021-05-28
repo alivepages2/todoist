@@ -1,5 +1,7 @@
 const puppeteer = require("puppeteer");
 
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 // Get a list of tasks from https://randomtodolistgenerator.herokuapp.com/library
 function getTasks() {
   return new Promise(async (resolve, reject) => {
@@ -31,7 +33,8 @@ function getTasks() {
 }
 
 // login in todoist
-function login(value) {
+function login(data) {
+  console.log(data);
   return new Promise(async (resolve, reject) => {
     try {
       const browser1 = await puppeteer.launch({
@@ -47,24 +50,41 @@ function login(value) {
       await page1.type("#password", "alive+123");
       await page1.click("button");
 
-      //await page1.waitForSelector("button.plus_add_button");
-      await page1.waitForTimeout(20000);
+      await page1.waitForXPath(
+        "/html/body/div[1]/div/div[2]/div[2]/main/div/div/div/section/div/ul/li[3]/button",
+        {
+          timeout: 200000,
+        }
+      );
 
-      // put task  in todoist
+      // put task in todoist
 
       console.log("ya");
 
-      await page1.click("button.plus_add_button");
-      await page1.type("*[data-text=true]", "tarea 1");
+      let elements = await page1.$x(
+        "/html/body/div[1]/div/div[2]/div[2]/main/div/div/div/section/div/ul/li[3]/button"
+      );
+      await elements[0].click();
 
-      await page1.click(".ist_button_red");
-      await page1.type("*[data-text=true]", "tarea 2");
+      // data.forEach(async function (dat, i) {
+      // if (i <= 4) {
+      await page1.type("*[data-text=true]", "joel");
+      elements = await page1.$x(
+        '//*[@id="agenda_view"]/div/section/div/ul/li/form/div[2]/button[1]'
+      );
 
-      await page1.click(".ist_button_red");
+      await elements[0].click();
+
+      elements = await page1.$x(
+        '//*[@id="agenda_view"]/div/section/div/ul/li/form/div[2]/button[1]'
+      );
+      await page1.type("*[data-text=true]", "fagundo");
+
+      await elements[0].click();
     } catch (e) {
       return reject(e);
     }
   });
 }
-getTasks().then(login()).catch(console.error);
+getTasks().then(login).catch(console.error);
 //login().catch(console.error);

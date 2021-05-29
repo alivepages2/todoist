@@ -34,9 +34,10 @@ function getTasks() {
 
 // login in todoist
 function login(data) {
-  console.log("data", data[0]);
-
-  /*
+  if (!data) {
+    console.log("faltan los datos");
+    exit();
+  }
   return new Promise(async (resolve, reject) => {
     try {
       const browser1 = await puppeteer.launch({
@@ -61,42 +62,25 @@ function login(data) {
 
       // put task in todoist
 
-      console.log("ya");
-
+      console.log("put task");
       let elements = await page1.$x(
         "/html/body/div[1]/div/div[2]/div[2]/main/div/div/div/section/div/ul/li/button"
       );
       await elements[0].click();
 
-      await page1.type("*[data-text=true]", "joel");
-      elements = await page1.$x(
-        '//*[@id="agenda_view"]/div/section/div/ul/li/form/div[2]/button[1]'
-      );
-      await elements[0].click();
-
-      await page1.type("*[data-text=true]", "fagundo");
-      elements = await page1.$x(
-        '//*[@id="agenda_view"]/div/section/div/ul/li[2]/form/div[2]/button[1]'
-      );
-      await elements[0].click();
-
-      await page1.type("*[data-text=true]", "sierra");
-      elements = await page1.$x(
-        '//*[@id="agenda_view"]/div/section/div/ul/li[3]/form/div[2]/button[1]'
-      );
-      await elements[0].click();
-
-      await page1.type("*[data-text=true]", "ok");
-      elements = await page1.$x(
-        '//*[@id="agenda_view"]/div/section/div/ul/li[4]/form/div[2]/button[1]'
-      );
-      await elements[0].click();
+      for (let i = 0; i < 4; i++) {
+        await page1.type("*[data-text=true]", data[i].text[0]);
+        elements = await page1.$x(
+          `//*[@id="agenda_view"]/div/section/div/ul/li[${
+            i + 1
+          }]/form/div[2]/button[1]`
+        );
+        await elements[0].click();
+      }
     } catch (e) {
       return reject(e);
     }
-    
   });
-  */
 }
 getTasks().then(login).catch(console.error);
 //login().catch(console.error);

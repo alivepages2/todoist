@@ -35,7 +35,7 @@ function getTasks() {
 // login in todoist
 function login(data) {
   if (!data) {
-    console.log("faltan los datos");
+    throw "No se pudo leer randomtodolistgenerator";
     exit();
   }
   return new Promise(async (resolve, reject) => {
@@ -83,4 +83,3 @@ function login(data) {
   });
 }
 getTasks().then(login).catch(console.error);
-//login().catch(console.error);
